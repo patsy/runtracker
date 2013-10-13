@@ -21,16 +21,12 @@ var kittySchema = mongoose.Schema({
 var Kitten = mongoose.model('Kitten', kittySchema);
 
 //callback function that creates two kittens is executed once the connection is open
+//TODO: this will add documents to collection every time the app is run...
 db.once('open', function callback () {
-	if (Kitten.find() == null) {
-		var rolf = new Kitten({name: 'Rolf', sound: 'weeow'});
-		var max = new Kitten({name: 'Max', sound: 'piip'});
-		rolf.save(function(err){if (err) console.log('Error on save')});
-		max.save(function(err){if (err) console.log('Error on save')});
-	}
-	else {
-		console.log("Data already in collection")
-	}
+	var rolf = new Kitten({name: 'Rolf', sound: 'weeow'});
+	var max = new Kitten({name: 'Max', sound: 'piip'});
+	rolf.save(function(err){if (err) console.log('Error on save')});
+	max.save(function(err){if (err) console.log('Error on save')});
 });
 
 //---------------------
