@@ -1,6 +1,8 @@
 
 var express = require('express');
 var app = express();
+var populate = require('./populatedb/populatedb');
+var Kitten = require('./model/kitten').Kitten;
 
 //Create database connection using mongoose
 var mongoose = require('mongoose');
@@ -11,22 +13,10 @@ mongoose.connect(connectionString);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error')); //bind errors to console
 
-//define what a kitten looks like, it has a name and a sound
-var kittySchema = mongoose.Schema({
-		name: String,
-		sound: String
-	});
-
-//compile the kitten model accordning to schema
-var Kitten = mongoose.model('Kitten', kittySchema);
-
 //callback function that creates two kittens is executed once the connection is open
 //TODO: this will add documents to collection every time the app is run...
 db.once('open', function callback () {
-	var rolf = new Kitten({name: 'Rolf', sound: 'weeow'});
-	var max = new Kitten({name: 'Max', sound: 'piip'});
-	rolf.save(function(err){if (err) console.log('Error on save')});
-	max.save(function(err){if (err) console.log('Error on save')});
+	populate.populatedb();
 });
 
 //---------------------
