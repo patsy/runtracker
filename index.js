@@ -35,6 +35,11 @@ app.get('/kitten', function(req, res){
 	})
 });
 
+//Map route
+app.get('/map', function(req, res) {
+	res.sendfile('./index.html');
+});
+
 //Fox route
 app.get('/fox', function(req, res){
   var q = "Hello my foxy pony!";
