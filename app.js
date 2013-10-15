@@ -1,6 +1,6 @@
-
 var express = require('express');
 var app = express();
+var hbs = require('hbs');
 var populate = require('./populatedb/populatedb');
 var Kitten = require('./model/kitten').Kitten;
 
@@ -20,11 +20,16 @@ db.once('open', function callback () {
 });
 
 //---------------------
-//Create routes
+
 app.listen(process.env.PORT || 5432);
 
+//define html files to be used with templating engine
+app.set('view engine', 'html');
+//load templating engine
+app.engine('html', hbs.__express);
+
 //Returns the sound of Rolf from mongodb
-app.get('/kitten', function(req, res){
+app.get('/api/kitten', function(req, res){
 	Kitten.find({name: 'Rolf'}, function (err, kittens) {
 		if (!err) {
 			res.json(kittens);
@@ -37,17 +42,22 @@ app.get('/kitten', function(req, res){
 
 //Map route
 app.get('/map', function(req, res) {
-	res.sendfile('./index.html');
+	res.render('map');
+});
+
+//API routes
+app.get('/api', function(req, res){
+  var q = "Hello my little pony!";
+  res.json(q);
 });
 
 //Fox route
-app.get('/fox', function(req, res){
+app.get('/api/fox', function(req, res){
   var q = "Hello my foxy pony!";
   res.json(q);
 });
 
-//Default route
+//Default  route
 app.get('/', function(req, res){
-  var q = "Hello my little pony!";
-  res.json(q);
+  res.render('map');
 });
