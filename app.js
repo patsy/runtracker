@@ -20,6 +20,7 @@ db.once('open', function callback () {
 });
 
 //---------------------
+app.use(express.static(__dirname + "/public"));
 
 app.listen(process.env.PORT || 5432);
 
@@ -51,7 +52,6 @@ app.get('/api', function(req, res){
   res.json(q);
 });
 
-//Fox route
 app.get('/api/fox', function(req, res){
   var q = "Hello my foxy pony!";
   res.json(q);
@@ -61,3 +61,6 @@ app.get('/api/fox', function(req, res){
 app.get('/', function(req, res){
   res.render('map');
 });
+
+
+
