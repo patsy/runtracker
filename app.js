@@ -20,6 +20,7 @@ db.once('open', function callback () {
 });
 
 //---------------------
+//serve static files from public directory
 app.use(express.static(__dirname + "/public"));
 
 app.listen(process.env.PORT || 5432);
