@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var path = require('path');
 var hbs = require('hbs');
 var populate = require('./populatedb/populatedb');
 var Kitten = require('./model/kitten').Kitten;
@@ -22,6 +23,8 @@ db.once('open', function callback () {
 //---------------------
 //serve static files from public directory
 app.use(express.static(__dirname + "/public"));
+// Everything in '/public' will be "mounted" in '/public'
+app.use('/public', express.static(path.join(__dirname, '/public')));
 
 app.listen(process.env.PORT || 5432);
 
@@ -48,9 +51,8 @@ app.get('/map', function(req, res) {
 });
 
 //API routes
-app.get('/api', function(req, res){
-  var q = "Hello my little pony!";
-  res.json(q);
+app.get('/api/point', function(req, res){
+  res.json( {'lat': '57.668', 'long': '11.945'} );
 });
 
 app.get('/api/fox', function(req, res){
