@@ -6,6 +6,7 @@
     "express": "3.x",
     "mongoose": "3.6.x",
     "hbs": "*",
-    "path": "*"
+    "path": "*",
+    "date": "*"
   }
 }

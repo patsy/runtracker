@@ -9,17 +9,15 @@ var kittySchema = mongoose.Schema({
 //define a runtrack as an object containing a collection of timestamped lng/lat pairs
 var runtrackSchema = mongoose.Schema({
 	name: String,
-	points: {
-		index: {
-			type: Number,
-			unique: true
-			},
-		timeStamp: Date,
-		loc: {
-			lng: Number,
-			lat: Number,
-		}
-	}
+	points: [
+				{
+					timestamp: Date,
+					loc: {
+						lng: Number,
+						lat: Number
+					}
+				}
+	]
 });
 
 //compile the  models accordning to schema

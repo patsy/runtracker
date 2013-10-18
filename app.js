@@ -12,12 +12,6 @@ mongoose.connect(connectionString);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error'));
 
-//callback function that creates two kittens is executed once the connection is open
-//TODO: this will add documents to collection every time the app is run...
-//db.once('open', function callback () {
-// 	populate.populatedb();
-// });
-
 //---------------------
 //serve static files from public directory
 app.use(express.static(__dirname + "/public"));
@@ -32,13 +26,6 @@ app.set('view engine', 'html');
 app.engine('html', hbs.__express);
 
 
-
-
-
-
-
-
-
 //Returns the sound of Rolf from mongodb
 app.get('/api/kitten', function(req, res){
 	Kitten.find({name: 'Rolf'}, function (err, kittens) {
@@ -46,7 +33,7 @@ app.get('/api/kitten', function(req, res){
 			res.json(kittens);
 		}
 		else {
-			res.json("ERROR, ABONDON SHIP");
+			res.json("Error when retrieving kittens");
 		}
 	})
 });
@@ -59,6 +46,17 @@ app.get('/map', function(req, res) {
 //API routes
 app.get('/api/point', function(req, res){
   res.json( {'lat': '57.668', 'long': '11.945'} );
+});
+
+app.get('/api/runtrack', function(req, res){
+	Runtrack.find({name: 'Track 1'}, function (err, runtracks) {
+		if (!err) {
+			res.json(runtracks);
+		}
+		else {
+			res.json("Error when retrieving runtracks");
+		}
+	})
 });
 
 //Default  route
