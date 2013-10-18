@@ -17,7 +17,7 @@ $.getJSON("/api/runtrack", function(result) {
 	for (var i =0; i < result[0].points.length; i++) {
 		var lat = result[0].points[i]['loc']['lat'];
 		var lng = result[0].points[i]['loc']['lng'];
-		coords.push([lat, lng]);
+		coords.push([lng, lat]);
 		L.marker([lng,lat]).addTo(map);
 	}
 	console.log(coords);

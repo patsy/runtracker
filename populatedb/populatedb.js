@@ -24,42 +24,42 @@ var track1 = new Runtrack({
 		{
 			timestamp: basedate,
 			loc: {
-				lng: 57.665,
-				lat: 11.453
+				lng: 57.705,
+				lat: 11.953
 			}
 		},
 		{
 			timestamp: addSeconds(basedate, 1),
 			loc: {
-				lng: 57.665,
-				lat: 11.455
+				lng: 57.706,
+				lat: 11.953
 			}
 		},
 		{
 			timestamp: addSeconds(basedate, 2),
 			loc: {
-				lng: 57.665,
-				lat: 11.457
+				lng: 57.701,
+				lat: 11.951
 			}
 		},
 		{
 			timestamp: addSeconds(basedate, 3),
 			loc: {
-				lng: 57.666,
-				lat: 11.459
+				lng: 57.699,
+				lat: 11.952
 			}
 		},
 		{
 			timestamp: addSeconds(basedate, 4),
 			loc: {
-				lng: 57.667,
-				lat: 11.461
+				lng: 57.700,
+				lat: 11.953
 			}
 		},{
 			timestamp: addSeconds(basedate, 5),
 			loc: {
-				lng: 57.668,
-				lat: 11.459
+				lng: 57.703,
+				lat: 11.954
 			}
 		}
 	]
