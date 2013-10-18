@@ -3,22 +3,21 @@ var app = express();
 var path = require('path');
 var hbs = require('hbs');
 var populate = require('./populatedb/populatedb');
-var Kitten = require('./model/kitten').Kitten;
+var Kitten = require('./model/schemas').Kitten;
+var Runtrack = require('./model/schemas').Runtrack;
 
-//Create database connection using mongoose
+//Create database connection, connect to db and show errors in console
 var mongoose = require('mongoose');
-//the connectionstring defines mongodb protocol, host and database
 var connectionString = 'mongodb://localhost/runtracker';
 mongoose.connect(connectionString);
-
 var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error')); //bind errors to console
+db.on('error', console.error.bind(console, 'connection error'));
 
 //callback function that creates two kittens is executed once the connection is open
 //TODO: this will add documents to collection every time the app is run...
-db.once('open', function callback () {
-	populate.populatedb();
-});
+//db.once('open', function callback () {
+// 	populate.populatedb();
+// });
 
 //---------------------
 //serve static files from public directory
@@ -32,6 +31,14 @@ app.listen(process.env.PORT || 5432);
 app.set('view engine', 'html');
 //load templating engine
 app.engine('html', hbs.__express);
+
+
+
+
+
+
+
+
 
 //Returns the sound of Rolf from mongodb
 app.get('/api/kitten', function(req, res){
@@ -53,11 +60,6 @@ app.get('/map', function(req, res) {
 //API routes
 app.get('/api/point', function(req, res){
   res.json( {'lat': '57.668', 'long': '11.945'} );
-});
-
-app.get('/api/fox', function(req, res){
-  var q = "Hello my foxy pony!";
-  res.json(q);
 });
 
 //Default  route
