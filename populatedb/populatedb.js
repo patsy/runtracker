@@ -32,34 +32,34 @@ var track1 = new Runtrack({
 			timestamp: addSeconds(basedate, 1),
 			loc: {
 				lng: 57.665,
-				lat: 11.453
+				lat: 11.455
 			}
 		},
 		{
 			timestamp: addSeconds(basedate, 2),
 			loc: {
 				lng: 57.665,
-				lat: 11.453
+				lat: 11.457
 			}
 		},
 		{
 			timestamp: addSeconds(basedate, 3),
 			loc: {
-				lng: 57.665,
-				lat: 11.453
+				lng: 57.666,
+				lat: 11.459
 			}
 		},
 		{
 			timestamp: addSeconds(basedate, 4),
 			loc: {
-				lng: 57.665,
-				lat: 11.453
+				lng: 57.667,
+				lat: 11.461
 			}
 		},{
 			timestamp: addSeconds(basedate, 5),
 			loc: {
-				lng: 57.665,
-				lat: 11.453
+				lng: 57.668,
+				lat: 11.459
 			}
 		}
 	]
