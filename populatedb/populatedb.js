@@ -1,5 +1,4 @@
-var kitten = require('./../model/kitten')
-var Kitten = kitten.Kitten;
+var Kitten = require('./../model/schemas').Kitten;
 
 var populatedb = function () {		
 	var rolf = new Kitten({name: 'Rolf', sound: 'weeow'});

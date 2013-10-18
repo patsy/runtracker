@@ -2,7 +2,6 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var hbs = require('hbs');
-var populate = require('./populatedb/populatedb');
 var Kitten = require('./model/schemas').Kitten;
 var Runtrack = require('./model/schemas').Runtrack;
 
