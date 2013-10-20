@@ -20,9 +20,21 @@ var runtrackSchema = mongoose.Schema({
 	]
 });
 
+var userSchema = mongoose.Schema({
+	username: String,
+	password: String
+});
+
+userSchema.methods.validPassword = function (passw) {
+	if (passw === this.password) {return true}
+	else {return false}
+};
+
 //compile the  models accordning to schema
 var Kitten = mongoose.model('Kitten', kittySchema);
 var Runtrack = mongoose.model('Runtrack', runtrackSchema);
+var User = mongoose.model('User', userSchema);
 //export models
 module.exports.Kitten = Kitten;
 module.exports.Runtrack = Runtrack;
+module.exports.User = User;
