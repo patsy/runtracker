@@ -1,5 +1,6 @@
 var Kitten = require('./../model/schemas').Kitten;
 var Runtrack = require('./../model/schemas').Runtrack;
+var User = require('./../model/schemas').User;
 
 var addSeconds = function(date, seconds) {
     return new Date(date.getTime() + seconds*1000);
@@ -14,12 +15,15 @@ db.on('error', console.error.bind(console, 'connection error'));
 
 var rolf = new Kitten({name: 'Rolf', sound: 'weeow'});
 var max = new Kitten({name: 'Max', sound: 'piip'});
-rolf.save(function(err){if (err) console.log('Error on save')});
-max.save(function(err){if (err) console.log('Error on save')});
+rolf.save(function(err){if (err) console.log('Error on save new kitten Rolf')});
+max.save(function(err){if (err) console.log('Error on save new kitten Max')});
+
+var defaultuser = new User( {username: 'default', password: 'password'} );
+defaultuser.save(function(err){if (err) console.log('Error on save new user')})
 
 var basedate = new Date();
 var track1 = new Runtrack({
-	name: 'Track 1',
+	name: 'Track1',
 	points: [
 		{
 			timestamp: basedate,
@@ -65,3 +69,5 @@ var track1 = new Runtrack({
 	]
 });
 track1.save(function(err){if (err) console.log('Error on save')});
+
+mongoose.connection.close();
