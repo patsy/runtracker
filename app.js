@@ -110,12 +110,38 @@ app.get('/api/runtrack', function(req, res){
 	})
 });
 
-//Login route
+//Login
 app.post('/login',
   passport.authenticate('local', { successRedirect: '/map',
                                    failureRedirect: '/failure',
                                    failureFlash: false })
 );
+
+// Logout
+app.post('/logout', function(req, res) {
+  req.logout();
+  res.redirect('/');
+});
+
+// Register user
+app.post('/register', function(req, res) {
+  console.log("Register user: " + req.body.username);
+  User.findOne( {username: req.body.username}, function(err, user) {
+    if (err) throw err; 
+    if (user) { 
+      console.log("User already exists") 
+    } else {
+        var newUser = new User({username: req.body.username, password: req.body.password});
+        newUser.save();
+        res.json("User saved");
+    }
+  })
+});
+
+// Failure to login
+app.get('/failure', function(req, res) {
+  res.render('failure');
+});
 
 //Default  route
 app.get('/', function(req, res){
