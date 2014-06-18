@@ -31,19 +31,26 @@ app.use(passport.session());
 passport.use(new LocalStrategy(
   function(username, password, done) {
     User.findOne({ username: username }, function(err, user) {
-      if (err) { return done(err); }
+      if (err) return done(err);
       if (!user) {
-      	console.log('Incorrect username');
+      	console.log('No user: ' + username + ' found');
         return done(null, false, { message: 'Incorrect username.' });
       }
-      if (!user.validPassword(password)) {
-      	console.log('Incorrect password');
-        return done(null, false, { message: 'Incorrect password.' });
-      }
+      // suppose the password was wrong...
+      user.comparePassword(password, function(err, isMatch) {
+        if (err) return done(err);
+        return done(null, user);
+      });
+      // if (!user.comparePassword(password)) {
+      // 	console.log('Incorrect password');
+      //   return done(null, false, { message: 'Incorrect password.' });
+      // }
+      // suppose the password is correct...
       return done(null, user);
     });
   }
 ));
+
 
 passport.serializeUser(function(user, done) {
     done(null, user.id);
