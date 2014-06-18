@@ -36,26 +36,22 @@ passport.use(new LocalStrategy(
       	console.log('No user: ' + username + ' found');
         return done(null, false, { message: 'Incorrect username.' });
       }
-      // suppose the password was wrong...
       user.comparePassword(password, function(err, isMatch) {
+        // suppose the password was wrong...
         if (err) return done(err);
+        // suppose the password is correct...
+        console.log('isMatch: ' + isMatch);
+        console.log('user.username: ' + user.username);
+        console.log('user.password: ' + user.password);
         return done(null, user);
       });
-      // if (!user.comparePassword(password)) {
-      // 	console.log('Incorrect password');
-      //   return done(null, false, { message: 'Incorrect password.' });
-      // }
-      // suppose the password is correct...
-      return done(null, user);
     });
   }
 ));
 
-
 passport.serializeUser(function(user, done) {
     done(null, user.id);
 });
-
 
 passport.deserializeUser(function(id, done) {
     User.findById(id, function(err,user) {
@@ -63,7 +59,6 @@ passport.deserializeUser(function(id, done) {
         done(null,user);
       });
     });
-
 
 app.listen(process.env.PORT || 5432);
 console.log("Started server running 'runtracker' at port 5432");
@@ -73,49 +68,21 @@ app.set('view engine', 'html');
 //load templating engine
 app.engine('html', hbs.__express);
 
-
-
-
-
-//Returns the sound of Rolf from mongodb
-app.get('/api/kitten', function(req, res){
-	Kitten.find({name: 'Rolf'}, function (err, kittens) {
-		if (!err) {
-			res.json(kittens);
-		}
-		else {
-			res.json("Error when retrieving kittens");
-		}
-	})
-});
-
-//Map route
-app.get('/map', function(req, res) {
-	res.render('map');
-});
-
-//API routes
-app.get('/api/point', function(req, res){
-  res.json( {'lat': '57.668', 'long': '11.945'} );
-});
-
-app.get('/api/runtrack', function(req, res){
-	Runtrack.find({name: 'Track1'}, function (err, runtracks) {
-		if (!err) {
-			res.json(runtracks);
-		}
-		else {
-			res.json("Error when retrieving runtracks");
-		}
-	})
-});
+// ROUTES
 
 //Login
-app.post('/login',
-  passport.authenticate('local', { successRedirect: '/map',
-                                   failureRedirect: '/failure',
-                                   failureFlash: false })
-);
+  app.get('/login', function(req, res) {
+      res.render('/', { user : req.user });
+  });
+
+  app.post('/login', passport.authenticate('local'), function(req, res) {
+      res.json(res.user);
+  });
+
+// Failure to login
+app.get('/failure', function(req, res) {
+  res.render('failure');
+});
 
 // Logout
 app.post('/logout', function(req, res) {
@@ -123,7 +90,11 @@ app.post('/logout', function(req, res) {
   res.redirect('/');
 });
 
-// Register user
+// Register
+app.get('/register', function(req, res) {
+  res.render('register');
+});
+
 app.post('/register', function(req, res) {
   console.log("Register user: " + req.body.username);
   User.findOne( {username: req.body.username}, function(err, user) {
@@ -138,15 +109,30 @@ app.post('/register', function(req, res) {
   })
 });
 
-// Failure to login
-app.get('/failure', function(req, res) {
-  res.render('failure');
+// Map 
+app.get('/map', passport.authenticate('local'), function(req, res) {
+  res.render('map');
 });
 
-//Default  route
+// Default
 app.get('/', function(req, res){
   res.render('home');
 });
 
 
+// API
 
+app.get('/api/point', function(req, res){
+  res.json( {'lat': '57.668', 'long': '11.945'} );
+});
+
+app.get('/api/runtrack', function(req, res){
+	Runtrack.find({name: 'Track1'}, function (err, runtracks) {
+		if (!err) {
+			res.json(runtracks);
+		}
+		else {
+			res.json("Error when retrieving runtracks");
+		}
+	})
+});
