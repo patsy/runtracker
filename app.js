@@ -1,18 +1,20 @@
-var express = require('express');
-var app = express();
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var path = require('path');
-var hbs = require('hbs');
-var Kitten = require('./model/schemas').Kitten;
-var Runtrack = require('./model/schemas').Runtrack;
-var User = require('./model/schemas').User;
+var express = require('express'),
+    app = express(),
+    passport = require('passport'),
+    LocalStrategy = require('passport-local').Strategy,
+    path = require('path'),
+    hbs = require('hbs'),
+    Runtrack = require('./model/schemas').Runtrack,
+    User = require('./model/schemas').User,
+    mongoose = require('mongoose');
 
 //Create database connection, connect to db and show errors in console
-var mongoose = require('mongoose');
-var connectionString = 'mongodb://localhost/runtracker';
-mongoose.connect(connectionString);
 var db = mongoose.connection;
+var connectionString = process.env.MONGOLAB_URI || 
+  process.env.MONGOHQ_URL || 
+  'mongodb://localhost/runtracker';
+
+mongoose.connect(connectionString);
 db.on('error', console.error.bind(console, 'connection error'));
 
 //---------------------
@@ -61,7 +63,7 @@ passport.deserializeUser(function(id, done) {
     });
 
 app.listen(process.env.PORT || 5000);
-console.log("Started server running 'runtracker' at port 5432");
+console.log("Started server running 'runtracker' at port 5000");
 
 //define html files to be used with templating engine
 app.set('view engine', 'html');
