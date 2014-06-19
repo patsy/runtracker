@@ -1,5 +1,4 @@
-var Kitten = require('./../model/schemas').Kitten;
-	Runtrack = require('./../model/schemas').Runtrack;
+var Runtrack = require('./../model/schemas').Runtrack;
 	User = require('./../model/schemas').User;
 
 var addSeconds = function(date, seconds) {
@@ -12,12 +11,6 @@ var connectionString = 'mongodb://localhost/runtracker';
 mongoose.connect(connectionString);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error'));
-
-// Create kittens
-var rolf = new Kitten({name: 'Rolf', sound: 'weeow'});
-var max = new Kitten({name: 'Max', sound: 'piip'});
-rolf.save(function(err){if (err) console.log('Error on save new kitten Rolf')});
-max.save(function(err){if (err) console.log('Error on save new kitten Max')});
 
 // Create default user
 var defaultuser = new User( {username: 'default', password: 'password'} );

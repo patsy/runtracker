@@ -60,7 +60,7 @@ passport.deserializeUser(function(id, done) {
       });
     });
 
-app.listen(process.env.PORT || 5432);
+app.listen(process.env.PORT || 5000);
 console.log("Started server running 'runtracker' at port 5432");
 
 //define html files to be used with templating engine
