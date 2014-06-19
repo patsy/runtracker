@@ -31,14 +31,14 @@ app.use(passport.session());
 passport.use(new LocalStrategy(
   function(username, password, done) {
     User.findOne({ username: username }, function(err, user) {
-      if (err) return done(err);
+      if (err) { return done(err); }
       if (!user) {
       	console.log('No user: ' + username + ' found');
         return done(null, false, { message: 'Incorrect username.' });
       }
       user.comparePassword(password, function(err, isMatch) {
         // suppose the password was wrong...
-        if (err) return done(err);
+        if (err) { return done(err); }
         // suppose the password is correct...
         console.log('isMatch: ' + isMatch);
         console.log('user.username: ' + user.username);
@@ -72,12 +72,15 @@ app.engine('html', hbs.__express);
 
 //Login
   app.get('/login', function(req, res) {
-      res.render('/', { user : req.user });
+      res.render('/');
   });
 
-  app.post('/login', passport.authenticate('local'), function(req, res) {
-      res.json(res.user);
-  });
+  app.post('/login', 
+    passport.authenticate('local', 
+    { successRedirect: '/map',
+      failureRedirect: '/failure',
+      failureFlash: true })
+  );
 
 // Failure to login
 app.get('/failure', function(req, res) {
@@ -109,8 +112,12 @@ app.post('/register', function(req, res) {
   })
 });
 
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  res.redirect('/register')
+}
 // Map 
-app.get('/map', passport.authenticate('local'), function(req, res) {
+app.get('/map', ensureAuthenticated, function(req, res) {
   res.render('map');
 });
 
