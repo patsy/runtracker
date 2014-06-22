@@ -31,31 +31,30 @@ var localStrategy = new LocalStrategy(
 server.use(express.static(__dirname + "/public"));
 // Everything in '/public' will be "mounted" in '/public'
 server.use('/public', express.static(path.join(__dirname, '/public')));
+//define html files to be used with templating engine
+//server.set('view engine', 'html');
+server.set('view engine', 'jade');
+//load templating engine
+//server.engine('html', hbs.__express);
 
-//Configure passport for authentication
+
 server.use(express.cookieParser());
 server.use(express.bodyParser());
 server.use(express.session({ secret: 'SECRET' }));
 
+// Configure passport
 server.use(passport.initialize());
 server.use(passport.session());
 
 passport.use(localStrategy);
-
 passport.serializeUser(function(user, done) {
     done(null, user.id);
 });
-
 passport.deserializeUser(function(id, done) {
     User.findById(id, function(err,user) {
         if(err) done(err);
         done(null,user);
       });
     });
-
-//define html files to be used with templating engine
-server.set('view engine', 'html');
-//load templating engine
-server.engine('html', hbs.__express);
 
 module.exports = server;

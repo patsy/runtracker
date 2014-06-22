@@ -49,12 +49,12 @@ module.exports = function(app) {
   }
   // Map 
   app.get('/map', ensureAuthenticated, function(req, res) {
-    res.render('map');
+    res.render('map', { title: 'Map'});
   });
 
   // Default
   app.get('/', function(req, res){
-    res.render('home');
+    res.render('index', { title: 'Home'});
   });
 
 
