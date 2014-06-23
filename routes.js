@@ -9,10 +9,11 @@ module.exports = function(app) {
   });
 
   app.post('/login', 
-    passport.authenticate('local', 
-    { successRedirect: '/map',
-      failureRedirect: '/failure',
-      failureFlash: true })
+    passport.authenticate('local'), 
+      function(req, res) {
+        if (req.user) {res.redirect('/' + req.user.username + '/map');}
+        if (!req.user) {res.redirect('/failure');}
+      }
   );
 
   app.post('/logout', function(req, res) {
@@ -24,7 +25,6 @@ module.exports = function(app) {
     res.render('failure');
   });
 
-  // Register
   app.get('/register', function(req, res) {
     res.render('register');
   });
@@ -48,8 +48,9 @@ module.exports = function(app) {
     res.redirect('/register')
   }
   // Map 
-  app.get('/map', ensureAuthenticated, function(req, res) {
-    res.render('map', { title: 'Map'});
+  app.get('/:username/map', ensureAuthenticated, function(req, res) {
+    var username = req.params.username;
+    res.render('map', { title: 'Map', username: username });
   });
 
   // Default
