@@ -11,15 +11,16 @@ $.getJSON("/api/point", function(result) {
 });
 
 //add run track from api
-$.getJSON("/api/runtrack", function(result) {
-	var runtrackPoints = result[0].points;
-	var coords = [];
-	for (var i =0; i < result[0].points.length; i++) {
-		var lat = result[0].points[i]['loc']['lat'];
-		var lng = result[0].points[i]['loc']['lng'];
-		coords.push([lng, lat]);
-		L.marker([lng,lat]).addTo(map);
+$.getJSON("/api/runtracks", function(result) {
+	for (var i = 0; i < result.length; i++) {
+		var runtrackPoints = result[i].points;
+		var lineCoords = [];
+		for (var j =0; j < runtrackPoints.length; j++) {
+			var lat = runtrackPoints[j]['loc']['lat'];
+			var lng = runtrackPoints[j]['loc']['lng'];
+			lineCoords.push([lng, lat]);
+			L.marker([lng,lat]).addTo(map);
+		}
+		L.polyline(lineCoords, {color: 'red', stroke: 'true', weight: 5}).addTo(map);
 	}
-	console.log(coords);
-	L.polyline(coords, {color: 'red', stroke: 'true', weight: 5}).addTo(map);
 });

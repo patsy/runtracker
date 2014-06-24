@@ -65,8 +65,8 @@ module.exports = function(app) {
     res.json( {'lat': '57.668', 'long': '11.945'} );
   });
 
-  app.get('/api/runtrack', function(req, res){
-  	Runtrack.find({name: 'Track1'}, function (err, runtracks) {
+  app.get('/api/runtracks', function(req, res){
+  	Runtrack.find({}, function (err, runtracks) {
   		if (!err) {
   			res.json(runtracks);
   		}
