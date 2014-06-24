@@ -1,9 +1,8 @@
 var express = require('express'),
 	path = require('path'),
 	passport = require('passport'),
-    hbs = require('hbs'),
-    LocalStrategy = require('passport-local').Strategy,
-    User = require('./model/schemas').User,
+  LocalStrategy = require('passport-local').Strategy,
+  User = require('./model/schemas').User,
 	server = express();
 
 var localStrategy = new LocalStrategy(

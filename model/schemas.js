@@ -5,13 +5,14 @@ var mongoose = require('mongoose'),
 //define a runtrack as an object containing a collection of timestamped lng/lat pairs
 var runtrackSchema = mongoose.Schema({
 	name: String,
+	user_id: String,
 	points: [
 				{
 					timestamp: Date,
 					loc: {
 						lng: Number,
 						lat: Number
-					}
+					},
 				}
 	]
 });
