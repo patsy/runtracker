@@ -1,8 +1,8 @@
 extend layout
 block main-content
   div
-  form.logout-form(action="/logout" method="post")
-  input(type="submit" value="Log Out")
-  .map#map(style="height: 480px")
-block post-body
-  script(src="/map.js")
+    form.logout-form(action="/logout" method="post")
+      input(id="loginout-button" type="submit" value="Log Out")
+    .map#map(style="height: 480px")
+  block post-body
+    script(src="/map.js")
