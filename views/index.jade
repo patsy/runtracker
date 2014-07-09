@@ -2,7 +2,7 @@ extend layout
 block main-content
   p.
     This is small app called Runtracker. You can register an account and hopefully soon upload and download your runtracks as well as analyzing them in different ways.
-  form.login-form(action="/login" method="post")
+  form.login-form(action="/login" method="post" id="login")
     div
       label Username:
       input(type="text" name="username")
@@ -11,4 +11,7 @@ block main-content
       input(type="password" name="password")
     div
       input(id="loginout-button" type="submit" value="Log In")
-  a(href="/register") Register
+    
+  a(href="/register")
+    button(type="button" class="btn btn-default btn-lg")
+        span(class="glyphicon glyphicon-star")

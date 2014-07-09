@@ -1,7 +1,11 @@
 doctype html
 html
   head
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible" content="IE=edge")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
     title #{title} - Runtracker
+    link(rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css")
     link(rel='stylesheet', href='/style.css')
     link(rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css")
     script(src="http://jqueryjs.googlecode.com/files/jquery-1.2.6.min.js")
@@ -12,6 +16,7 @@ html
     .container
       .main-content
         block main-content
+    script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js")
   block post-body
       footer
       p Awesome footer
