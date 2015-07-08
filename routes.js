@@ -3,10 +3,6 @@ var passport = require('passport'),
     User = require('./model/schemas').User;
 
 module.exports = function(app) {
-  
-  app.get('/login', function(req, res) {
-      res.render('/');
-  });
 
   app.post('/login', 
     passport.authenticate('local'), 
