@@ -17,12 +17,21 @@ var runtrackSchema = mongoose.Schema({
 	]
 });
 
+var LocSchema = mongoose.Schema({
+	type : { type : String },
+	loc: {
+		type: { type : String },
+		coordinates : { type : [], index : '2dsphere' }
+	},
+	properties : { type : String }
+});
+
 var userSchema = mongoose.Schema({
 	username: { type: String, required: true, index: { unique: true} },
 	password: { type: String, required: true }
 });
 
-userSchema.pre('save', function(next) { 
+userSchema.pre('save', function(next) {
 	var user = this;
 	if (!user.isModified('password')) return next();
 	bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
@@ -44,6 +53,8 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
 
 var Runtrack = mongoose.model('Runtrack', runtrackSchema);
 var User = mongoose.model('User', userSchema);
+var Loc = mongoose.model('Loc', LocSchema);
 
 module.exports.Runtrack = Runtrack;
+module.exports.Loc = Loc;
 module.exports.User = User;

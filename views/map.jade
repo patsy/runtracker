@@ -1,8 +1,13 @@
 extend layout
 block main-content
   div
-    form.logout-form(action="/logout" method="post")
+    form#upload-gpx-form(action="/api/location" method="post" enctype="multipart/form-data")
+      input(id="file-select" type="file" name="gpxfile")
+      input(id="upload-button" type="submit" value="Upload GPX")
+  div
+    form#logout-form(action="/logout" method="post")
       input(id="loginout-button" type="submit" value="Log Out")
+
     .map#map(style="height: 480px")
   block post-body
     script(src="/map.js")

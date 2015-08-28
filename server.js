@@ -1,6 +1,9 @@
 var express = require('express'),
 	path = require('path'),
+	bodyparser = require('body-parser'),
+	multer = require('multer'),
 	passport = require('passport'),
+	session = require('express-session'),
   LocalStrategy = require('passport-local').Strategy,
   User = require('./model/schemas').User,
 	server = express();
@@ -37,10 +40,11 @@ server.set('view engine', 'jade');
 //server.engine('html', hbs.__express);
 
 
-server.use(express.cookieParser());
-server.use(express.bodyParser());
-server.use(express.session({ secret: 'SECRET' }));
-
+//server.use(express.bodyParser());
+server.use(bodyparser.urlencoded({extended: true}));
+server.use(bodyparser.json());
+server.use(session({ secret: 'SECRET', cookie: {maxAge: 60000}, resave: true, saveUninitialized: true }));
+server.use(multer({dest: 'public/uploads/'}).array('gpxfiles', 12));
 // Configure passport
 server.use(passport.initialize());
 server.use(passport.session());

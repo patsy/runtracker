@@ -15,4 +15,3 @@ Run app:
 
 Check output by navigating to localhost:5000 or use curl:
 'curl localhost:5000'
-
