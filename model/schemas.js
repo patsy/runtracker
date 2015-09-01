@@ -17,15 +17,25 @@ var runtrackSchema = mongoose.Schema({
 	]
 });
 
-var LocSchema = mongoose.Schema({
+// The FeatureCollectionSchema can store geolocation and metadata in GeoJSON
+var FeatureCollectionSchema = mongoose.Schema({
 	type : { type : String },
-	loc: {
-		type: { type : String },
-		coordinates : { type : [], index : '2dsphere' }
-	},
-	properties : { type : String }
+	features : [ {
+		type : { type : String }, // Feature
+		properties : {
+			name : { type : String },
+			time : { type : Date },
+			coordTimes : [Date],
+			altitude : { type : [] }
+		},
+		geometry: {
+			type : { type : String }, // Point, LineString, MultiLineString, Polygon...
+			coordinates : []
+		}
+	} ]
 });
-
+// Add 2dsphere index to FeatureCollectionSchema to enable geo searchs
+FeatureCollectionSchema.index({"geometry" : "2dsphere"});
 var userSchema = mongoose.Schema({
 	username: { type: String, required: true, index: { unique: true} },
 	password: { type: String, required: true }
@@ -53,8 +63,8 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
 
 var Runtrack = mongoose.model('Runtrack', runtrackSchema);
 var User = mongoose.model('User', userSchema);
-var Loc = mongoose.model('Loc', LocSchema);
+var FeatureCollection = mongoose.model('FeatureCollection', FeatureCollectionSchema);
 
 module.exports.Runtrack = Runtrack;
-module.exports.Loc = Loc;
+module.exports.FeatureCollection = FeatureCollection;
 module.exports.User = User;

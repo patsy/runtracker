@@ -6,7 +6,7 @@ var passport = require('passport'),
     path = require('path'),
     Runtrack = require('./model/schemas').Runtrack,
     User = require('./model/schemas').User,
-    Loc = require('./model/schemas').Loc;
+    FeatureCollection = require('./model/schemas').FeatureCollection;
 
 module.exports = function(app) {
 
@@ -82,45 +82,62 @@ module.exports = function(app) {
   	})
   });
 
+  //
   app.post('/api/location', function(req, res) {
+    // Read file from POST and convert to GeoJSON object
     var filePath = req.files[0].path;
     fs.readFile(path.join(__dirname, filePath), 'utf8', function(err, xmlStr) {
       if (err) { console.log("Could not read file " + path.join(__dirname, filePath))};
       var dom = (new DOMParser()).parseFromString(xmlStr, 'text/xml');
       var gpxasgeojson = togeojson.gpx(dom);
-      var str = JSON.stringify(gpxasgeojson);
-      fs.writeFile(path.join(__dirname, "gpxfile.gpx"), str, function(err) {
-        if (err) return console.log(err);
-      })
-      console.log("Geometry type: " + gpxasgeojson.features[0].geometry.type);
-      // starting with multilinestring : [ [ [long,lat,alt],..], [ [long,lat,alt],...],... ] or multilinestring(linestring(coordinates))
-      // strip altitude value from all coordinates
-      // var strippedCoordinates = gpxasgeojson.features[0].geometry.coordinates.map(function(obj) { //map each linestring in multilinestring
-      //   obj.map(function(el) { // map each coordinate in linestring
-      //     return new Array(el[0],el[1]) // replace with [long,lat]  for each element in linestring
-      //   });
-      //   return obj; // replace with same object for each element in multilinestring
+      // Write GPX file as GeoJSON to file
+      // var str = JSON.stringify(gpxasgeojson);
+      // fs.writeFile(path.join(__dirname, "gpxfile.gpx"), str, function(err) {
+      //   if (err) return console.log(err);
       // })
-      for(i=0;i<gpxasgeojson.features[0].geometry.coordinates.length;i++) { // loop over linestrings
-        for(j=0;j<gpxasgeojson.features[0].geometry.coordinates[i].length;j++) { // loop over coordinates
-          gpxasgeojson.features[0].geometry.coordinates[i][j] = gpxasgeojson.features[0].geometry.coordinates[i][j].slice(0,2) // replace coordinate value
+
+      // Create an empty feature collection
+      if (gpxasgeojson.type === 'FeatureCollection') {
+        var featureList = [];
+        // Loop over all features in feature collection and add to featureList
+        for(i=0;i<gpxasgeojson.features.length;i++) {
+          var feat = {
+            "type" : gpxasgeojson.features[i].type,
+            "properties" : {
+              "name" : gpxasgeojson.features[i].properties.name,
+              "time" : Date(gpxasgeojson.features[i].properties.time),
+              "coordTimes" : gpxasgeojson.features[i].properties.coordTimes.map(function(el) {
+                return Date(el)
+              }),
+              "altitude" : gpxasgeojson.features[i].geometry.coordinates.map(function(outerEl){
+                return outerEl.map(function(innerEl) {
+                  return innerEl.slice(2,3);
+                })
+              })
+            },
+            "geometry" : {
+              "type" : gpxasgeojson.features[i].geometry.type,
+              "coordinates" : gpxasgeojson.features[i].geometry.coordinates.map(function(outerEl){
+                return outerEl.map(function(innerEl) {
+                  return innerEl.slice(0,2);
+                })
+              })
+            },
+          };
+          featureList.push(feat);
         }
-      }
-      //console.log('strippedCoordinates' + JSON.stringify(gpxasgeojson.features[0].geometry.coordinates));
-
-
-      var newLoc = new Loc({
-        type : 'Feature',
-        loc : {
-          type : 'LineString',
-          coordinates : gpxasgeojson.features[0].geometry.coordinates
-        },
-        properties : 'Awesome'
-      });
-      console.log("Saving track")
-      newLoc.save(function(err, doc){
-        if (err) console.log(err)
-      })
+        // Finally save as FeatureCollection model
+        var newFeatureCollection = new FeatureCollection({
+          "type" : gpxasgeojson.type,
+          "features" : featureList
+        });
+        console.log("Saving track")
+        newFeatureCollection.save(function(err, doc){
+          if (err) console.log(err)
+        })
+    } else {
+      console.log("Not a FeatureCollection so not saving to database");
+    }
     });
   })
 
