@@ -2,6 +2,8 @@ var passport = require('passport'),
     fs = require('fs'),
     togeojson = require('togeojson'),
     multer = require('multer'),
+    storage = multer.memoryStorage(),
+    upload = multer({ storage : storage }),
     DOMParser = require('xmldom').DOMParser,
     path = require('path'),
     Runtrack = require('./model/schemas').Runtrack,
@@ -82,24 +84,19 @@ module.exports = function(app) {
   	})
   });
 
-  //
-  app.post('/api/location', function(req, res) {
-    // Read file from POST and convert to GeoJSON object
-    var filePath = req.files[0].path;
-    fs.readFile(path.join(__dirname, filePath), 'utf8', function(err, xmlStr) {
-      if (err) { console.log("Could not read file " + path.join(__dirname, filePath))};
-      var dom = (new DOMParser()).parseFromString(xmlStr, 'text/xml');
-      var gpxasgeojson = togeojson.gpx(dom);
-      // Write GPX file as GeoJSON to file
-      // var str = JSON.stringify(gpxasgeojson);
-      // fs.writeFile(path.join(__dirname, "gpxfile.gpx"), str, function(err) {
-      //   if (err) return console.log(err);
-      // })
+  /* This endpoint reads a file buffer from request and saves it to database */
+  app.post('/api/location', upload.array('gpxfiles'), function(req, res) {
+      /* Create DOM parser and parse xml from buffer to DOM to GeoJSON */
+      var domParser = new DOMParser(),
+          bufferString = req.files[0].buffer.toString('utf8'),
+          xmldom = domParser.parseFromString(bufferString,'text/xml');
+      var gpxasgeojson = togeojson.gpx(xmldom);
+      console.log(req.files[0].buffer.toString('utf8'));
 
-      // Create an empty feature collection
+      /* Create an empty feature collection */
       if (gpxasgeojson.type === 'FeatureCollection') {
         var featureList = [];
-        // Loop over all features in feature collection and add to featureList
+        /* Loop over all features in feature collection and add to featureList */
         for(i=0;i<gpxasgeojson.features.length;i++) {
           var feat = {
             "type" : gpxasgeojson.features[i].type,
@@ -126,7 +123,7 @@ module.exports = function(app) {
           };
           featureList.push(feat);
         }
-        // Finally save as FeatureCollection model
+        /* Finally save FeatureCollection model */
         var newFeatureCollection = new FeatureCollection({
           "type" : gpxasgeojson.type,
           "features" : featureList
@@ -139,7 +136,6 @@ module.exports = function(app) {
       console.log("Not a FeatureCollection so not saving to database");
     }
     });
-  })
 
   return app;
 }

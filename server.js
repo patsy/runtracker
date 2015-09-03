@@ -6,7 +6,9 @@ var express = require('express'),
 	session = require('express-session'),
   LocalStrategy = require('passport-local').Strategy,
   User = require('./model/schemas').User,
-	server = express();
+	server = express(),
+	storage = multer.memoryStorage();
+
 
 var localStrategy = new LocalStrategy(
   function(username, password, done) {
@@ -44,7 +46,8 @@ server.set('view engine', 'jade');
 server.use(bodyparser.urlencoded({extended: true}));
 server.use(bodyparser.json());
 server.use(session({ secret: 'SECRET', cookie: {maxAge: 60000}, resave: true, saveUninitialized: true }));
-server.use(multer({dest: 'public/uploads/'}).array('gpxfiles', 12));
+//server.use(multer({ storage: multer.memoryStorage({}) }).single('gpxfile'))
+//server.use(multer({dest: 'public/uploads/'}).array('gpxfiles', 12));
 // Configure passport
 server.use(passport.initialize());
 server.use(passport.session());
