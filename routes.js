@@ -86,6 +86,7 @@ module.exports = function(app) {
 
   /* This endpoint reads a file buffer from request and saves it to database */
   app.post('/api/location', upload.array('gpxfiles'), function(req, res) {
+    for(fNr=0;fNr<req.files.length;fNr++) {
       /* Create DOM parser and parse xml from buffer to DOM to GeoJSON */
       var domParser = new DOMParser(),
           bufferString = req.files[0].buffer.toString('utf8'),
@@ -132,10 +133,10 @@ module.exports = function(app) {
         newFeatureCollection.save(function(err, doc){
           if (err) console.log(err)
         })
-    } else {
+      } else {
       console.log("Not a FeatureCollection so not saving to database");
     }
-    });
-
+  }
+});
   return app;
 }
