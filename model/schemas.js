@@ -20,6 +20,7 @@ var runtrackSchema = mongoose.Schema({
 // The FeatureCollectionSchema can store geolocation and metadata in GeoJSON
 var FeatureCollectionSchema = mongoose.Schema({
 	type : { type : String },
+	username : { type : String },
 	features : [ {
 		type : { type : String }, // Feature
 		properties : {

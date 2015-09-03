@@ -127,6 +127,7 @@ module.exports = function(app) {
         /* Finally save FeatureCollection model */
         var newFeatureCollection = new FeatureCollection({
           "type" : gpxasgeojson.type,
+          "username" : req.user._doc.username,
           "features" : featureList
         });
         console.log("Saving track")

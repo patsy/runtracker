@@ -35,19 +35,13 @@ var localStrategy = new LocalStrategy(
 server.use(express.static(__dirname + "/public"));
 // Everything in '/public' will be "mounted" in '/public'
 server.use('/public', express.static(path.join(__dirname, '/public')));
-//define html files to be used with templating engine
-//server.set('view engine', 'html');
 server.set('view engine', 'jade');
-//load templating engine
-//server.engine('html', hbs.__express);
 
 
 //server.use(express.bodyParser());
 server.use(bodyparser.urlencoded({extended: true}));
 server.use(bodyparser.json());
 server.use(session({ secret: 'SECRET', cookie: {maxAge: 60000}, resave: true, saveUninitialized: true }));
-//server.use(multer({ storage: multer.memoryStorage({}) }).single('gpxfile'))
-//server.use(multer({dest: 'public/uploads/'}).array('gpxfiles', 12));
 // Configure passport
 server.use(passport.initialize());
 server.use(passport.session());
