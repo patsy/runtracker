@@ -9,5 +9,11 @@ block main-content
       input(id="loginout-button" type="submit" value="Log Out")
 
     .map#map(style="height: 480px")
-  block post-body
+  div
+    ul
+      each fCol in featureCollections
+        each feat in fCol.features
+          li= feat.properties.name
+
+  block tracklist
     script(src="/map.js")

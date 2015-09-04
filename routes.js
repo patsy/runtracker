@@ -58,7 +58,9 @@ module.exports = function(app) {
   // Map
   app.get('/:username/map', ensureAuthenticated, function(req, res) {
     var username = req.params.username;
-    res.render('map', { title: 'Map', username: username });
+    FeatureCollection.find({'username' : req.user._doc.username}, function(err, data) {
+      res.render('map', { title : 'Map', username : username, featureCollections : data });
+    })
   });
 
   // Default
