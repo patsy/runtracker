@@ -5,8 +5,8 @@ var passport = require('passport'),
 
 //Create database connection, connect to db and show errors in console
 var db = mongoose.connection;
-var connectionString = process.env.MONGOLAB_URI || 
-    process.env.MONGOHQ_URL || 
+var connectionString = process.env.MONGOLAB_URI ||
+    process.env.MONGOHQ_URL ||
     'mongodb://localhost/runtracker';
 
 mongoose.connect(connectionString);

@@ -1,9 +1,14 @@
 var express = require('express'),
 	path = require('path'),
+	bodyparser = require('body-parser'),
+	multer = require('multer'),
 	passport = require('passport'),
+	session = require('express-session'),
   LocalStrategy = require('passport-local').Strategy,
   User = require('./model/schemas').User,
-	server = express();
+	server = express(),
+	storage = multer.memoryStorage();
+
 
 var localStrategy = new LocalStrategy(
   function(username, password, done) {
@@ -30,17 +35,13 @@ var localStrategy = new LocalStrategy(
 server.use(express.static(__dirname + "/public"));
 // Everything in '/public' will be "mounted" in '/public'
 server.use('/public', express.static(path.join(__dirname, '/public')));
-//define html files to be used with templating engine
-//server.set('view engine', 'html');
 server.set('view engine', 'jade');
-//load templating engine
-//server.engine('html', hbs.__express);
 
 
-server.use(express.cookieParser());
-server.use(express.bodyParser());
-server.use(express.session({ secret: 'SECRET' }));
-
+//server.use(express.bodyParser());
+server.use(bodyparser.urlencoded({extended: true}));
+server.use(bodyparser.json());
+server.use(session({ secret: 'SECRET', cookie: {maxAge: 60000}, resave: true, saveUninitialized: true }));
 // Configure passport
 server.use(passport.initialize());
 server.use(passport.session());
