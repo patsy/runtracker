@@ -17,6 +17,7 @@
     "passport-local": "*",
     "path": "*",
     "togeojson": "^0.12.2",
+    "winston": "^1.0.1",
     "xmldom": "^0.1.19"
   }
 }

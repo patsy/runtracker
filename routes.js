@@ -8,7 +8,8 @@ var passport = require('passport'),
     path = require('path'),
     Runtrack = require('./model/schemas').Runtrack,
     User = require('./model/schemas').User,
-    FeatureCollection = require('./model/schemas').FeatureCollection;
+    FeatureCollection = require('./model/schemas').FeatureCollection,
+    logger = require('./logger');
 
 module.exports = function(app) {
 
@@ -38,11 +39,11 @@ module.exports = function(app) {
   });
 
   app.post('/register', function(req, res) {
-    console.log("Register user: " + req.body.username);
+    logger.log('info', 'Register user: %s', req.body.username)
     User.findOne( {username: req.body.username}, function(err, user) {
       if (err) throw err;
       if (user) {
-        console.log("User already exists")
+        logger.log('info', 'User %s already exists', req.user.username);
       } else {
           var newUser = new User({username: req.body.username, password: req.body.password});
           newUser.save();
@@ -68,24 +69,6 @@ module.exports = function(app) {
     res.render('index', { title: 'Home'});
   });
 
-
-  // API
-
-  app.get('/api/point', function(req, res){
-    res.json( {'lat': '57.668', 'long': '11.945'} );
-  });
-
-  app.get('/api/runtracks', function(req, res){
-  	Runtrack.find({}, function (err, runtracks) {
-  		if (!err) {
-  			res.json(runtracks);
-  		}
-  		else {
-  			res.json("Error when retrieving runtracks");
-  		}
-  	})
-  });
-
   /* This endpoint reads a file buffer from request and saves it to database */
   app.post('/api/location', upload.array('gpxfiles'), function(req, res) {
     for(fNr=0;fNr<req.files.length;fNr++) {
@@ -94,7 +77,6 @@ module.exports = function(app) {
           bufferString = req.files[0].buffer.toString('utf8'),
           xmldom = domParser.parseFromString(bufferString,'text/xml');
       var gpxasgeojson = togeojson.gpx(xmldom);
-      console.log(req.files[0].buffer.toString('utf8'));
 
       /* Create an empty feature collection */
       if (gpxasgeojson.type === 'FeatureCollection') {
@@ -132,12 +114,15 @@ module.exports = function(app) {
           "username" : req.user._doc.username,
           "features" : featureList
         });
-        console.log("Saving track")
         newFeatureCollection.save(function(err, doc){
-          if (err) console.log(err)
+          if (err) {
+            logger.log('debug', 'Error: %s', err);
+          } else {
+            logger.log('info', 'Saving track %s', doc._id.toString());
+          }
         })
       } else {
-      console.log("Not a FeatureCollection so not saving to database");
+        logger.log('debug', 'Not a FeatureCollection so not saving to database');
     }
   }
 });

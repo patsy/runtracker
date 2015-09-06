@@ -7,7 +7,8 @@ var express = require('express'),
   LocalStrategy = require('passport-local').Strategy,
   User = require('./model/schemas').User,
 	server = express(),
-	storage = multer.memoryStorage();
+	storage = multer.memoryStorage(),
+	logger = require('./logger');
 
 
 var localStrategy = new LocalStrategy(
@@ -15,16 +16,15 @@ var localStrategy = new LocalStrategy(
     User.findOne({ username: username }, function(err, user) {
       if (err) { return done(err); }
       if (!user) {
-      	console.log('No user: ' + username + ' found');
+      	logger.log('debug', 'No user: %s found', username);
         return done(null, false, { message: 'Incorrect username.' });
       }
       user.comparePassword(password, function(err, isMatch) {
         // suppose the password was wrong...
         if (err) { return done(err); }
         // suppose the password is correct...
-        console.log('isMatch: ' + isMatch);
-        console.log('user.username: ' + user.username);
-        console.log('user.password: ' + user.password);
+        logger.log('isMatch: ' + isMatch);
+        logger.log('info', 'User: %s logged in', user.username);
         return done(null, user);
       });
     });

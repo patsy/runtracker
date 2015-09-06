@@ -1,7 +1,8 @@
 var passport = require('passport'),
     Runtrack = require('./model/schemas').Runtrack,
     mongoose = require('mongoose'),
-    routes = require('./routes');
+    routes = require('./routes'),
+    logger = require('./logger');
 
 //Create database connection, connect to db and show errors in console
 var db = mongoose.connection;
@@ -14,7 +15,8 @@ db.on('error', console.error.bind(console, 'connection error'));
 
 
 
-var app = require('./server.js');
+var app = require('./server.js'),
+    port = process.env.PORT || 5000;
 app = routes(app);
-app.listen(process.env.PORT || 5000);
-console.log("Started server running 'runtracker' at port 5000");
+app.listen(port);
+logger.log('debug', 'Started server running runtracker at port ' + port);
