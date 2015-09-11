@@ -9,7 +9,9 @@ var passport = require('passport'),
     Runtrack = require('./model/schemas').Runtrack,
     User = require('./model/schemas').User,
     FeatureCollection = require('./model/schemas').FeatureCollection,
-    logger = require('./logger');
+    logger = require('./logger'),
+    mongoose = require('mongoose'),
+    ObjectId = mongoose.Types.ObjectId;
 
 module.exports = function(app) {
 
@@ -68,6 +70,23 @@ module.exports = function(app) {
   app.get('/', function(req, res){
     res.render('index', { title: 'Home'});
   });
+
+  /* Get one feature from its id (stored inside a FeatureCollection) */
+  app.get('/api/feature/:id', ensureAuthenticated, function(req, res) {
+    var oIdString = req.params.id,
+        oId = ObjectId.fromString(req.params.id);
+    logger.log('info', 'Getting feature by id: %s', oIdString);
+    FeatureCollection.find({'features._id':oId}, function(err, featureCollection) {
+        if (err) {
+          logger.log('info', 'Error finding a feature with id: %s', oIdString);
+          return res.json(err);
+        } else {
+          logger.log('info', 'Found feature with id: %s', oIdString);
+          var feature = featureCollection[0].features.id(oIdString);
+          return res.json(feature);
+        }
+    })
+  })
 
   /* This endpoint reads a file buffer from request and saves it to database */
   app.post('/api/location', upload.array('gpxfiles'), function(req, res) {
