@@ -1,4 +1,4 @@
-.body { 
+.body {
 	background: url('ricepaper_v3.png');
 }
 
@@ -40,4 +40,10 @@ background-color :#399630; /*make the background a little darker*/
 -webkit-box-shadow: 0 0 1px rgba(0,0,0, .75);
 -moz-box-shadow: 0 0 1px rgba(0,0,0, .75);
 box-shadow: 0 0 1px rgba(0,0,0, .75);
+}
+
+.trackdiv {
+	font-family: "Courier New", "Lucida Console";
+	font-size: 24 px;
+	
 }

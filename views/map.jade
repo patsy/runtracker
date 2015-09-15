@@ -12,7 +12,7 @@ block main-content
   div
     each fCol in featureCollections
       each feat in fCol.features
-        div(class="trackdiv" id= feat._id ) Feature ID: #{feat._id}
+        div(class="trackdiv" id= feat._id onClick="") Feature ID: #{feat._id}
 
   block tracklist
     script(src="/map.js")

@@ -32,4 +32,19 @@ $(document).ready(function() {
 	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'})
 		.addTo(map);
+
+	var showTrack = function() {
+		$.ajax({
+			url : '/api/feature/' + this.id,
+			method : 'GET',
+			dataType : 'JSON',
+			success : function(data, status, jqXHR) {
+				var line = L.geoJson(data).addTo(map);
+				map.fitBounds(line.getBounds());
+			}
+		})
+	}
+
+	// Add updateTrack to all divs with class trackdiv
+	$(".trackdiv").click(showTrack);
 });
