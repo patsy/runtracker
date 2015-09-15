@@ -112,7 +112,7 @@ module.exports = function(app) {
               }),
               "altitude" : gpxasgeojson.features[i].geometry.coordinates.map(function(outerEl){
                 return outerEl.map(function(innerEl) {
-                  return innerEl.slice(2,3);
+                  return innerEl.slice(2,3)[0];
                 })
               })
             },
